@@ -187,6 +187,58 @@ git push -u origin main
 
 ---
 
+### 第 8 步：后续怎么「更新并上传」（日常应用向）
+
+**你要做的事**：以后每次你更新笔记/代码，都按这条链路走一遍：**改文件（工作区）→ add（暂存区）→ commit（本地仓库）→ push（远程 GitHub）**。
+
+#### 8.1 最常用的日常更新三连
+
+```bash
+git status
+git add .
+git commit -m "Update notes"
+git push
+```
+
+- **git status**：先看一眼当前改了哪些文件、哪些已经在暂存区，避免漏提/误提。
+- **git add .**：把当前目录下的改动放进暂存区（相当于“这次提交要包含这些改动”）。
+- **git commit -m "..."**：把暂存区打成一条提交，写进本地历史；message 要能说明“这次改了什么”。
+- **git push**：把本地新增的提交上传到 GitHub。因为你第一次用过 `git push -u origin main`，Git 已记住上游分支，所以这里可以不写 `origin main`。
+
+#### 8.2 只想提交一部分文件（不要用 add .）
+
+```bash
+git add subjects/github/08-example-from-zero-to-github.md
+git commit -m "Update GitHub example"
+git push
+```
+
+- **在干什么**：你在“挑选”本次提交的范围，只把指定文件放进暂存区；其他文件改动仍留在工作区，不会被这次 commit 带走。
+
+#### 8.3 如果 push 被拒绝（远程比你新）
+
+常见原因：你在 GitHub 网页上改过文件、或另一台电脑 push 过，导致远程 `origin/main` 比你本地 `main` 多了一些提交。
+
+```bash
+git pull --rebase
+git push
+```
+
+- **git pull --rebase**：先把远程的新提交拉下来，再把你的本地提交“接”在远程最新提交后面（历史更直）。如果你不想用 rebase，也可以用 `git pull`（会 merge）。
+- **再 git push**：此时本地已经包含远程更新，推送就不会再因为 “non-fast-forward” 被拒。
+
+如果 pull 过程中出现 **冲突**（conflict），按提示打开冲突文件，手动决定保留哪边内容，保存后：
+
+```bash
+git add 冲突文件
+git rebase --continue
+git push
+```
+
+（冲突与同步细节见 [07-pull-and-sync.md](07-pull-and-sync.md)。）
+
+---
+
 ## 4. 流程小结（对应关系）
 
 | 步骤 | 你在做的 | 对应的概念/篇 |
